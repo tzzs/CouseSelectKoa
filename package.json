@@ -1,7 +1,7 @@
 {
-  "name": "koa-task",
+  "name": "couseselectkoa",
   "version": "1.0.0",
-  "description": "",
+  "description": "A couse selection system based on koa",
   "main": "app.js",
   "dependencies": {
     "ejs": "^2.6.1",
@@ -23,6 +23,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "tzz",
   "license": "ISC"
 }
