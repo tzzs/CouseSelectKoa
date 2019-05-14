@@ -17,6 +17,7 @@ const User = sequelize.define('user', {
     timestamp: false
   });
 
+//创建数据库
 User.sync();
 
 module.exports = User;

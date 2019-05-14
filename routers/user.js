@@ -16,6 +16,6 @@ router.post('/signup', user.register);//用户注册接口
 
 // router.get('/logout', user.sessionlogout);//用户退出接口
 
-router.post('/login', user.userLogin);//登录接口
+router.post('/login', user.login);//登录接口
 
 module.exports = router;

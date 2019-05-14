@@ -27,7 +27,7 @@ const register = async (ctx) => {
   let username = params.username;
 
   //查询当前用户是否存在
-  let user = await User.findOne({ where: { stuid: params.username } });
+  let user = await User.findOne({ where: { stuid: username } });
 
   let msg = new Msg();
   if (user == null) {
@@ -63,13 +63,13 @@ const register = async (ctx) => {
   } else {
     //存在
     msg.code = 401;
-    msg.message = "false";
+    msg.message = "用户名已存在";
     msg.data = { data: '用户名已存在' };
     ctx.body = msg;
   }
 };
 
-const userLogin = async (ctx) => {
+const login = async (ctx) => {
   //query和body
   let params = ctx.request.query;
   if (JSON.stringify(params) === '{}') {
@@ -77,7 +77,6 @@ const userLogin = async (ctx) => {
   }
   const username = params.username;
   const password = params.password;
-  console.log('userLogin:', params);
 
   let msg = new Msg();
   try {
@@ -88,12 +87,13 @@ const userLogin = async (ctx) => {
       ctx.body = msg;
       return;
     }
-    const user = await query(`select * from user where username='${username}'`);
-    if (user.length === 0) {
+    const user = await User.findOne({ where: { stuid: username } });
+    console.log(user);
+    if (user == null) {
       msg.code = 401;
       msg.message = '用户名错误';
     } else {
-      if (auth.getHash(password) == user[0].password) {
+      if (auth.getHash(password) == user.password) {
         msg.message = '登录成功';
         msg.data = { token: auth.getToken({ username: username }) };
         ctx.body = msg;
@@ -112,10 +112,6 @@ const userLogin = async (ctx) => {
     msg.data = { error: error };
     ctx.body = msg;
   }
-};
-
-const login = async (ctx) => {
-  await ctx.render('login', {})
 };
 
 const testlogin = async (ctx) => {
@@ -137,58 +133,5 @@ const testlogin = async (ctx) => {
   ctx.body = msg;
 };
 
-const sessionlogin = async (ctx) => {
-  //query和body
-  let params = ctx.request.query;
-  if (JSON.stringify(params) === '{}') {
-    params = ctx.request.body;
-  }
-  const username = params.username;
-  const password = params.password;
-  console.log('userLogin:', params);
 
-  let msg = new Msg();
-  try {
-    if (!username || !password) {
-      msg.code = 400;
-      msg.message = 'false';
-      msg.data = { error: `expected an object with username, password but got nothing` };
-      ctx.body = msg;
-      return;
-    }
-    const user = await query(`select * from user where username='${username}'`);
-    if (user.length == 0) {
-      msg.code = 401;
-      msg.message = '用户名错误';
-    } else {
-      if (auth.getHash(password) == user[0].password) {
-        msg.message = '登录成功';
-        ctx.session.user = username;
-        ctx.body = msg;
-      } else {
-        msg.code = 401;
-        msg.message = '密码错误';
-      }
-    }
-    console.log(msg);
-    ctx.body = msg;
-  } catch (error) {
-    console.log('userLogin Error:', error);
-    console.log(msg);
-    msg.code = 401;
-    msg.message = '登录时发生错误';
-    msg.data = { error: error };
-    ctx.body = msg;
-  }
-};
-
-const sessionlogout = async (ctx) => {
-  ctx.session = null;
-  let msg = new Msg();
-  msg.code = 0;
-  msg.message = 'success';
-  ctx.body = msg;
-};
-
-
-module.exports = { getAll, register, login, userLogin, sessionlogin, testlogin, sessionlogout };
+module.exports = { getAll, register, login, testlogin };
