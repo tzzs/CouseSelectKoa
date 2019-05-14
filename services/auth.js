@@ -8,8 +8,6 @@ function getToken(payload = {}) {
     return jwt.sign(payload, secret, { expiresIn: '3h' });
 }
 
-
-
 function getJWTPayload(token) {
     return jwt.verify(token.split(' ')[1], secret);
 }

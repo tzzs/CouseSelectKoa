@@ -1,4 +1,4 @@
-const {Sequelize, sequelize} = require('./../services/sequelize');
+const { Sequelize, sequelize } = require('./../services/sequelize');
 
 const User = sequelize.define('user', {
   id: {
@@ -6,11 +6,17 @@ const User = sequelize.define('user', {
     autoIncrement: true,
     primaryKey: true
   },
-  name: Sequelize.STRING(100)
-
+  stuid: Sequelize.STRING,
+  name: Sequelize.STRING,
+  password: Sequelize.STRING(500),
+  email: Sequelize.STRING,
+  phone: Sequelize.STRING,
+  sex: Sequelize.STRING(20),
+  college: Sequelize.STRING(500),
 }, {
-  tableName: 'user',
-  timestamp: false
-});
+    timestamp: false
+  });
+
+User.sync();
 
 module.exports = User;
