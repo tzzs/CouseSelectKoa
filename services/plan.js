@@ -22,8 +22,9 @@ const getAll = async (ctx) => {
 const getPlan = async (ctx) => {
   let params = ctx.request.query;
   if (JSON.stringify(params) === '{}') {
-    parmas = ctx.request.body;
+    params = ctx.request.body;
   }
+  console.log(params);
   let where = {}, find = {}
   if (params.grade) {
     where['grade'] = params.grade
@@ -35,6 +36,8 @@ const getPlan = async (ctx) => {
     where['profession'] = params.profession
   }
 
+  find['where'] = where
+  let count = await Plan.findAll(find)
   //判断页数限制
   if (params.limit) {
     find['limit'] = parseInt(params.limit);
@@ -44,8 +47,7 @@ const getPlan = async (ctx) => {
     find['offset'] = params.limit * (params.page - 1);
   }
 
-  find['where'] = where
-  let count = await Plan.findAll(where)
+
   let list = await Plan.findAll(find)
 
   let res = []
@@ -53,7 +55,6 @@ const getPlan = async (ctx) => {
   list = JSON.parse(JSON.stringify(list))
   for (let l in list) {
     if (list[l].course) {
-      console.log(list[l].course, await Course.findOne({ where: { cid: list[l].course } }));
       let course = await Course.findOne({ where: { cid: list[l].course } });
       // console.log(res);
       if (course) {
@@ -61,7 +62,6 @@ const getPlan = async (ctx) => {
         let tmp = JSON.parse(JSON.stringify(list[l]))
         list[l] = Object.assign(course, tmp)
         list[l].id = tmp.id
-        console.log(list[l], tmp);
       }
     }
 
