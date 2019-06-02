@@ -3,7 +3,6 @@ const router = require('koa-router')();
 const demo = require('./demo');
 const u = require('./user');
 const user = require('./user');
-const messageBoard = require('./messageBoard');
 
 router.use('/demo', demo.routes(), demo.allowedMethods()); //测试接口
 

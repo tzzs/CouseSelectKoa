@@ -1,4 +1,5 @@
 const { Sequelize, sequelize } = require('./../services/sequelize');
+const { modelsConfig } = require('./../configs/config')
 
 const User = sequelize.define('user', {
   id: {
@@ -20,6 +21,6 @@ const User = sequelize.define('user', {
   });
 
 //创建数据库
-User.sync();
+User.sync({ force: modelsConfig.force });
 
 module.exports = User;

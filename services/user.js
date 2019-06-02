@@ -3,6 +3,7 @@ const { query } = require('./mysql');
 const Msg = require('./../models/Msg');
 const auth = require('./auth');
 const User = require('./../models/User');
+const Plan = require('../models/Plan')
 
 
 async function queryAll() {

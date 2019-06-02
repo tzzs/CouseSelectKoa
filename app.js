@@ -63,6 +63,7 @@ app.use(async function (ctx, next) {
 
 let port = 8080;
 app.use(routers.routes()).use(routers.allowedMethods());
+
 app.listen(port, () => {
   console.log(`Sever start at 127.0.0.1:${port}`);
 });

@@ -6,4 +6,8 @@ const config = {
     database: 'cs'
 };
 
-module.exports = config;
+const modelsConfig = {
+    force: false
+}
+
+module.exports = { config, modelsConfig };
