@@ -20,8 +20,6 @@ const filter = jwtKoa({ secret: secret }).unless({
     path: [
         /^\/login/,
         /^\/register/,
-        // /^\/index/,
-        /^\/userlogin/,
         //静态文件
         /.*\w*.js/,
         /^\/css\/.*/,

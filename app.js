@@ -38,17 +38,19 @@ app.use((ctx, next) => {
   })
 });
 
-// app.use(auth.filter);
+// app.use(auth.filter);//权限拦截
 app.use(logger());
 app.use(bodyParser());
 
 //静态资源配置
 app.use(static(path.join(__dirname, './static')));
 
+//模板渲染
 app.use(views(path.join(__dirname, './views'), {
   extension: 'ejs'
 }));
 
+//404拦截
 app.use(async function (ctx, next) {
   await next();
   console.log(ctx.status);
