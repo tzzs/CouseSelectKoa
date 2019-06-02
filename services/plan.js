@@ -34,23 +34,40 @@ const getPlan = async (ctx) => {
   if (params.profession) {
     where['profession'] = params.profession
   }
+
+  //判断页数限制
+  if (params.limit) {
+    find['limit'] = parseInt(params.limit);
+  }
+  //当前页数
+  if (params.page) {
+    find['offset'] = params.limit * (params.page - 1);
+  }
+
   find['where'] = where
+  let count = await Plan.findAll(where)
   let list = await Plan.findAll(find)
 
+  let res = []
+
+  list = JSON.parse(JSON.stringify(list))
   for (let l in list) {
-    let course = await Course.findOne({ where: { cid: list[l].course } })
-    console.log(list[l].course + ":::" + course);
-    if (course) {
-      course = JSON.parse(JSON.stringify(course))
-      for (let c in course) {
-        if (course.hasOwnProperty(c) == true && list[l].hasOwnProperty(c) == false) {
-          list[l][c] = course[c]
-          console.log(list[l]);
-        }
+    if (list[l].course) {
+      console.log(list[l].course, await Course.findOne({ where: { cid: list[l].course } }));
+      let course = await Course.findOne({ where: { cid: list[l].course } });
+      // console.log(res);
+      if (course) {
+        course = JSON.parse(JSON.stringify(course))
+        let tmp = JSON.parse(JSON.stringify(list[l]))
+        list[l] = Object.assign(course, tmp)
+        list[l].id = tmp.id
+        console.log(list[l], tmp);
       }
     }
+
   }
-  console.log(list);
+  // console.log(list, list[0]['college']);
+
   let msg = new Msg()
 
   let alllist = await Plan.findAll()
@@ -73,8 +90,8 @@ const getPlan = async (ctx) => {
 
   msg.code = 20000
   msg.data = {
-    items: JSON.parse(JSON.stringify(list)),
-    total: list.length,
+    items: list,
+    total: count.length,
     grades: grades,
     colleges: colleges,
     professions: professions
