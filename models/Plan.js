@@ -10,7 +10,7 @@ const Plan = sequelize.define('plan', {
   },
   grade: Sequelize.INTEGER,
   semester: Sequelize.INTEGER,
-  course: Sequelize.INTEGER,
+  course: Sequelize.STRING,
   profession: Sequelize.STRING,
   college: Sequelize.STRING
 }, {

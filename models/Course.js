@@ -7,16 +7,17 @@ const Course = sequelize.define('course', {
     autoIncrement: true,
     primaryKey: true
   },
-  cid: Sequelize.INTEGER,
+  cid: Sequelize.STRING,
   name: Sequelize.STRING,
   teacher: Sequelize.STRING,
-  credit: Sequelize.INTEGER,
-  rate: Sequelize.INTEGER,
+  credit: Sequelize.FLOAT,
+  rate: Sequelize.FLOAT,
   evaluation: Sequelize.STRING,// 考核方式
   number: Sequelize.INTEGER,
-  week: Sequelize.INTEGER,
-  time: Sequelize.STRING(5000),
-  type: Sequelize.STRING, //课程性质
+  week: Sequelize.STRING(1000),
+  time: Sequelize.STRING(1000),
+  type: Sequelize.STRING, //课程类别
+  nature: Sequelize.STRING,// 性质
   college: Sequelize.STRING,
   class: Sequelize.STRING,
   status: Sequelize.STRING
