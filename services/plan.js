@@ -64,7 +64,6 @@ const getPlan = async (ctx) => {
         list[l].id = tmp.id
       }
     }
-
   }
   // console.log(list, list[0]['college']);
 
