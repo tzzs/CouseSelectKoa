@@ -51,7 +51,16 @@ const getRec = async (ctx) => {
     parmas = ctx.request.body;
   }
   electives = await Elective.findAll()
-  ctx.body = electives
+  edic = {}
+  for (e of electives) {
+    if (!edic.hasOwnProperty(e.stuid)) {
+      edic[e.stuid] = {}
+    }
+    edic[e.stuid][e.cid] = e.rate
+  }
+  console.log(edic);
+
+  ctx.body = { electives, edic }
 }
 
 
