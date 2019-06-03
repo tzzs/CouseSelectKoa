@@ -18,4 +18,22 @@ const getCourse = async (ctx) => {
   ctx.body = msg
 }
 
-module.exports = { getCourse }
+const addMock = async (ctx) => {
+  let params = ctx.request.query
+  if (JSON.stringify(params) === '{}') {
+    parmas = ctx.request.body;
+  }
+  console.log(params);
+  Course.create({
+    cid: params.id,
+    name: params.name,
+    teacher: params.teacher,
+    credit: params.credit,
+    rate: params.rate,
+    number: params.stu_number
+  })
+  let msg = new Msg()
+
+}
+
+module.exports = { getCourse, addMock }
