@@ -50,6 +50,8 @@ const getRec = async (ctx) => {
   if (JSON.stringify(params) === '{}') {
     parmas = ctx.request.body;
   }
+  electives = await Elective.findAll()
+  ctx.body = electives
 }
 
 
