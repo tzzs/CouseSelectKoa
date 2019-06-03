@@ -110,12 +110,37 @@ const getTree = async (ctx) => {
     })
 
   }
-
-
   let msg = new Msg()
   msg.code = 20000
   msg.data = { items: list }
   ctx.body = msg
 }
 
-module.exports = { getAll, getPlan, getTree }
+const addPlan = async (ctx) => {
+  console.log('ADDPLAN POST');
+  let params = ctx.request.query;
+  if (JSON.stringify(params) === '{}') {
+    params = ctx.request.body;
+  }
+  console.log(params);
+  let msg = new Msg()
+  let plan = Plan.create({
+    course: params.course,
+    semester: parseInt(params.semester),
+    grade: parseInt(params.grade),
+    college: params.college,
+    profession: params.profession
+  }).then(function () {
+  }).catch(function (err) {
+    msg.code = 20001
+    msg.message = '添加失败'
+    msg.data = { err }
+    ctx.body = msg
+  })
+  msg.code = 20000
+  msg.data = { items: plan }
+  msg.message = '添加成功'
+  ctx.body = msg
+}
+
+module.exports = { getAll, getPlan, getTree, addPlan }

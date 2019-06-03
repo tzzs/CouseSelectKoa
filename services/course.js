@@ -8,14 +8,14 @@ const getCourse = async (ctx) => {
   if (JSON.stringify(params) === '{}') {
     parmas = ctx.request.body;
   }
-  let where = {}
-  if (params.grade) {
-    where['grade'] = params.grade
-  }
-  let list = await Plan.findAll()
-  console.log(JSON.stringify(list));
+  let list = await Course.findAll()
   let msg = new Msg()
   msg.code = 20000
-  msg.data = { items: list }
+  msg.data = {
+    items: list,
+    total: list.length
+  }
   ctx.body = msg
 }
+
+module.exports = { getCourse }
