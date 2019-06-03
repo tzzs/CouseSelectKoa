@@ -6,17 +6,18 @@ const Elective = require('./../models/Elective')
 // 修正余弦相似性函数 相似余弦距离
 function calCosinDis(user1, user2) {
   // 用户对项目平均评分
+  // console.log(user1, user2);
   avg1 = 0.0
   avg2 = 0.0
   for (key in user1) {
     avg1 += user1[key]
   }
-  avg1 = avg1 / user1.length
+  avg1 = avg1 / Object.keys(user1).length
 
   for (key in user2) {
     avg2 += user2[key]
   }
-  avg2 = avg2 / user2.length
+  avg2 = avg2 / Object.keys(user2).length
 
   res = 0
 
@@ -44,6 +45,11 @@ function calCosinDis(user1, user2) {
   return res / (res1 * res2)
 }
 
+// 计算预测评分
+function eRate(user) {
+
+}
+
 
 const getRec = async (ctx) => {
   let params = ctx.request.query;
@@ -51,6 +57,7 @@ const getRec = async (ctx) => {
     parmas = ctx.request.body;
   }
   electives = await Elective.findAll()
+  // 评分矩阵
   edic = {}
   for (e of electives) {
     if (!edic.hasOwnProperty(e.stuid)) {
@@ -60,7 +67,64 @@ const getRec = async (ctx) => {
   }
   console.log(edic);
 
-  ctx.body = { electives, edic }
+  // 相似度矩阵
+  simMat = {}
+  for (e1 in edic) {
+    simMat[e1] = {}
+    for (e2 in edic) {
+      if (e1 != e2) {
+        simMat[e1][e2] = calCosinDis(edic[e1], edic[e2])
+      }
+    }
+  }
+
+  stuid = '11503070301'
+  // 可能推荐课程
+  courses = []
+  for (key in edic) {
+    for (k in edic[key]) {
+      if (Object.keys(edic[stuid]).indexOf(k) < 0 && courses.indexOf(k) < 0) {
+        courses.push(k)
+      }
+    }
+  }
+  recList = {}
+  let savg = 0
+  for (e in edic[stuid]) {
+    savg += edic[stuid][e]
+  }
+  savg /= Object.keys(edic[stuid]).length
+
+  for (course of courses) {
+    let res = 0, abs = 0
+    for (user in simMat[stuid]) {
+      if (edic[user].hasOwnProperty(course)) {
+        // 计算平均评分
+        let avg = 0
+        for (e in edic[user]) {
+          avg += edic[user][e]
+        }
+        avg /= Object.keys(edic[user]).length
+
+        res += (edic[user][course] - avg) * simMat[stuid][user]
+
+        abs += Math.abs(simMat[stuid][user])
+      }
+    }
+    res = res / abs + savg
+    console.log(course, res);
+    // 推荐top 3
+    recList[course] = res
+    // if (Object.keys(recList).length <= 3) {
+    //   recList[course] = res
+    // } else if (recList[2] < res) {
+    //   delete recList[Object.keys(recList)[2]]
+    //   recList[course] = res
+    // }
+  }
+
+
+  ctx.body = { edic, simMat, recList }
 }
 
 
