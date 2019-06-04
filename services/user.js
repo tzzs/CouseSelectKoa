@@ -141,11 +141,12 @@ const info = async (ctx) => {
     params = ctx.request.body;
   }
   let token = params.token
+  if (!token) {
+    token = ctx.header['x-token']
+  }
   let msg = new Msg();
   if (token) {
     try {
-      console.log('TOKEN:', token);
-      console.log(auth.getPayload(token));
       token = auth.getPayload(token)
       const user = await User.findOne({ where: { stuid: token.username } });
       if (user == null) {
@@ -153,8 +154,9 @@ const info = async (ctx) => {
         msg.message = '用户名错误';
       } else {
         delete user.password
+        roles = user.roles.split(' ')
         ctx.body = {
-          roles: ['admin'],
+          roles: roles,
           introduction: 'I am a super administrator',
           avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
           name: 'Super Admin',

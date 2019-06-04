@@ -15,7 +15,9 @@ const User = sequelize.define('user', {
   sex: Sequelize.STRING(20),
   college: Sequelize.STRING(500),
   profession: Sequelize.STRING,
-  class: Sequelize.STRING
+  class: Sequelize.STRING,
+  roles: Sequelize.STRING,
+  avatar: Sequelize.STRING
 }, {
     timestamp: false
   });
