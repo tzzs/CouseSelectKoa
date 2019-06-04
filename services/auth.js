@@ -12,6 +12,10 @@ function getJWTPayload(token) {
     return jwt.verify(token.split(' ')[1], secret);
 }
 
+function getPayload(token){
+    return jwt.verify(token,secret)
+}
+
 function getHash(str) {
     return crypto.createHash('sha256').update(str).digest('hex');
 }
@@ -31,4 +35,4 @@ const filter = jwtKoa({ secret: secret }).unless({
     ]
 });
 
-module.exports = { getToken, getJWTPayload, filter, getHash };
+module.exports = { getToken, getJWTPayload, filter, getHash ,getPayload};

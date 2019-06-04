@@ -15,6 +15,7 @@ router.use('/plan', plan.routes(), plan.allowedMethods())
 
 router.use('/api/course', course.routes(), course.allowedMethods())
 router.use('/api/elective', elective.routes(), elective.allowedMethods())
+router.use('/user', user.routes(), user.allowedMethods())
 
 module.exports = router;
 

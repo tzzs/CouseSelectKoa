@@ -18,4 +18,8 @@ router.post('/signup', user.register);//用户注册接口
 
 router.post('/login', user.login);//登录接口
 
+router.post('/register', user.register)
+
+router.post('/info',user.info)
+
 module.exports = router;

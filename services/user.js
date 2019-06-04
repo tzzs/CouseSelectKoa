@@ -46,15 +46,15 @@ const register = async (ctx) => {
 
       //密码加密
       password = auth.getHash(password);
-      console.log(password);
       let user = await User.create({
         stuid: username,
         password: password
       });
-      msg.code = 0;
+      msg.code = 20000;
       msg.message = 'success';
       msg.data = { token: auth.getToken({ username: username }) };
-      ctx.body = msg;
+      // msg.data = auth.getToken({ username: username });
+      ctx.body = msg
     } catch (error) {
       msg.code = 401;
       msg.message = "false";
@@ -89,7 +89,7 @@ const login = async (ctx) => {
       return;
     }
     const user = await User.findOne({ where: { stuid: username } });
-    console.log(user);
+    // console.log(user);
     if (user == null) {
       msg.code = 401;
       msg.message = '用户名错误';
@@ -134,5 +134,53 @@ const testlogin = async (ctx) => {
   ctx.body = msg;
 };
 
+const info = async (ctx) => {
+  //query和body
+  let params = ctx.request.query;
+  if (JSON.stringify(params) === '{}') {
+    params = ctx.request.body;
+  }
+  let token = params.token
 
-module.exports = { getAll, register, login, testlogin };
+  let msg = new Msg();
+  if (token) {
+    try {
+      console.log('TOKEN:', token);
+      console.log(auth.getPayload(token));
+      token = auth.getPayload(token)
+      const user = await User.findOne({ where: { stuid: token.username } });
+      if (user == null) {
+        msg.code = 401;
+        msg.message = '用户名错误';
+      } else {
+        delete user.password
+        ctx.body = {
+          roles: ['admin'],
+          introduction: 'I am a super administrator',
+          avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+          name: 'Super Admin',
+          code: 20000,
+          data: {
+            user
+          }
+        }
+        return
+      }
+      ctx.body = msg;
+    } catch (error) {
+      console.log('userLogin Error:', error);
+      console.log(msg);
+      msg.code = 401;
+      msg.message = '登录时发生错误';
+      msg.data = { error: error };
+      ctx.body = msg;
+    }
+  } else {
+    msg.code = 401;
+    msg.message = '未找到token';
+    ctx.body = msg;
+  }
+};
+
+
+module.exports = { getAll, register, login, testlogin, info };
