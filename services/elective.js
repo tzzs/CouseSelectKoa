@@ -2,6 +2,8 @@ const Plan = require('../models/Plan')
 const Msg = require('./../models/Msg')
 const Course = require('./../models/Course')
 const Elective = require('./../models/Elective')
+const User = require('./../models/User')
+const auth = require('./auth')
 
 // 修正余弦相似性函数 相似余弦距离
 function calCosinDis(user1, user2) {
@@ -149,4 +151,104 @@ const getRec = async (ctx) => {
 }
 
 
-module.exports = { getRec }
+// 获取本人选课
+const getElective = async (ctx) => {
+  let params = ctx.request.query
+  if (JSON.stringify(params) === '{}') {
+    params = ctx.request.body
+  }
+  let token = params.token
+  if (!token) {
+    token = ctx.header['x-token']
+  }
+  let msg = new Msg()
+  if (token) {
+    token = auth.getPayload(token)
+    res = await Elective.findAll({ where: { stuid: token.username } })
+    elist = []
+    for (r of res) {
+      let course = await Course.findOne({ where: { cid: r.cid } })
+      console.log(course);
+      if (course) {
+        elist.push(course)
+      }
+    }
+    msg.code = 20000
+    msg.data = {
+      items: elist,
+      total: elist.length
+    }
+  } else {
+    msg.message = "未携带token"
+  }
+  ctx.body = msg
+}
+
+const add = async (ctx) => {
+  let params = ctx.request.query
+  if (JSON.stringify(params) === '{}') {
+    params = ctx.request.body
+  }
+  let token = params.token
+  if (!token) {
+    token = ctx.header['x-token']
+  }
+  let msg = new Msg()
+  if (token) {
+    token = auth.getPayload(token)
+    cid = params.cid
+    let elective = Elective.create({
+      cid: cid,
+      stuid: token.username
+    })
+    msg.code = 20000
+    msg.message = '添加成功'
+    msg.data = { elective }
+  } else {
+    msg.message = "未携带token"
+  }
+  ctx.body = msg
+}
+
+const get = async (ctx) => {
+  let params = ctx.request.query
+  if (JSON.stringify(params) === '{}') {
+    params = ctx.request.body
+  }
+  let token = params.token
+  if (!token) {
+    token = ctx.header['x-token']
+  }
+  let msg = new Msg()
+  if (token) {
+    token = auth.getPayload(token)
+    res = await Elective.findAll({ where: { stuid: token.username } })
+    user = await User.findOne({
+      where: {
+        stuid: token.username
+      }
+    })
+    elist = []
+    for (r of res) {
+      course = await Course.findOne({ where: { cid: r.cid } })
+      plan = await Plan.findOne({ where: { grade: 2015, profession: user.profession, course: r.cid } })
+      elist.push({
+        cid: r.cid,
+        name: course.name,
+        grade: r.grade,
+        teacher: course.teacher,
+        semester: plan.semester
+      })
+    }
+    msg.code = 20000
+    msg.data = {
+      items: elist,
+      total: elist.length
+    }
+  } else {
+    msg.message = "未携带token"
+  }
+  ctx.body = msg
+}
+
+module.exports = { getRec, getElective, add, get }

@@ -11,7 +11,8 @@ const Elective = sequelize.define('elective', {
   stuid: Sequelize.STRING,
   rate: Sequelize.FLOAT,
   usual: Sequelize.FLOAT,
-  testscore:Sequelize.FLOAT
+  testscore: Sequelize.FLOAT,
+  grade:Sequelize.FLOAT
 }, {
   timestamp:false
   })
