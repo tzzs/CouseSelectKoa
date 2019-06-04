@@ -14,7 +14,10 @@ router.use('', u.routes(), u.allowedMethods()); //用户接口
 router.use('/plan', plan.routes(), plan.allowedMethods())
 
 router.use('/api/course', course.routes(), course.allowedMethods())
-router.use('/api/elective', elective.routes(), elective.allowedMethods())
+
+// router.use('/api/elective', elective.routes(), elective.allowedMethods())
+router.use('/elective', elective.routes(), elective.allowedMethods())
+
 router.use('/user', user.routes(), user.allowedMethods())
 
 

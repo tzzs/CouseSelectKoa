@@ -20,7 +20,8 @@ const Course = sequelize.define('course', {
   nature: Sequelize.STRING,// 性质
   college: Sequelize.STRING,
   class: Sequelize.STRING,
-  status: Sequelize.STRING
+  status: Sequelize.STRING,
+  peroid: Sequelize.INTEGER
 }, {
     timestamp: false
   });

@@ -132,7 +132,20 @@ const getRec = async (ctx) => {
     // recList[course] = res
   }
 
-  ctx.body = { recList }
+  result = []
+  for (rec in recList) {
+    course = await Course.findOne({ where: { cid: rec } })
+    result.push(course)
+  }
+
+  ctx.body = {
+    code: 20000,
+    data: {
+      rec: recList,
+      items: result,
+      total: result.length
+    }
+  }
 }
 
 
