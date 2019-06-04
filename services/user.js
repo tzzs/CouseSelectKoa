@@ -141,7 +141,6 @@ const info = async (ctx) => {
     params = ctx.request.body;
   }
   let token = params.token
-
   let msg = new Msg();
   if (token) {
     try {
@@ -161,7 +160,9 @@ const info = async (ctx) => {
           name: 'Super Admin',
           code: 20000,
           data: {
-            user
+            user,
+            avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+            name: 'Super Admin'
           }
         }
         return
