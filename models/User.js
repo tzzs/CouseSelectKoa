@@ -17,7 +17,9 @@ const User = sequelize.define('user', {
   profession: Sequelize.STRING,
   class: Sequelize.STRING,
   roles: Sequelize.STRING,
-  avatar: Sequelize.STRING
+  avatar: Sequelize.STRING,
+  regTIme: Sequelize.STRING,
+  lastTime: Sequelize.STRING
 }, {
     timestamp: false
   });
