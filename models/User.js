@@ -18,7 +18,7 @@ const User = sequelize.define('user', {
   class: Sequelize.STRING,
   roles: Sequelize.STRING,
   avatar: Sequelize.STRING,
-  regTIme: Sequelize.STRING,
+  regTime: Sequelize.STRING,
   lastTime: Sequelize.STRING
 }, {
     timestamp: false

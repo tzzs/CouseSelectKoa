@@ -45,11 +45,6 @@ function calCosinDis(user1, user2) {
   return res / (res1 * res2)
 }
 
-// 计算预测评分
-function eRate(user) {
-
-}
-
 
 const getRec = async (ctx) => {
   let params = ctx.request.query;
@@ -112,19 +107,32 @@ const getRec = async (ctx) => {
       }
     }
     res = res / abs + savg
-    console.log(course, res);
+    if (Object.keys(recList).length >= 3) {
+      let minkey = undefined, minvalue = undefined, flag = true
+      for (r in recList) {
+        if (flag) {
+          minkey = r
+          minvalue = recList[r]
+          flag = false
+        } else {
+          if (recList[r] < minvalue) {
+            minkey = r
+            minvalue = recList[r]
+          }
+        }
+      }
+      if (res > minvalue) {
+        delete recList[minkey]
+        recList[course] = res
+      }
+    } else {
+      recList[course] = res
+    }
     // 推荐top 3
-    recList[course] = res
-    // if (Object.keys(recList).length <= 3) {
-    //   recList[course] = res
-    // } else if (recList[2] < res) {
-    //   delete recList[Object.keys(recList)[2]]
-    //   recList[course] = res
-    // }
+    // recList[course] = res
   }
 
-
-  ctx.body = { edic, simMat, recList }
+  ctx.body = { recList }
 }
 
 
