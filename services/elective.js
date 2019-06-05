@@ -74,8 +74,20 @@ const getRec = async (ctx) => {
       }
     }
   }
-
-  stuid = '11503070301'
+  let token = params.token
+  if (!token) {
+    token = ctx.header['x-token']
+  }
+  console.log(token);
+  if (token) {
+    token = auth.getPayload(token)
+    stuid = token.username
+  } else {
+    let msg = new Msg()
+    msg.message = '未携带token'
+    ctx.body = msg
+    return
+  }
   // 可能推荐课程
   courses = []
   for (key in edic) {
