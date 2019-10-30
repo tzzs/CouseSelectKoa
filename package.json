@@ -16,7 +16,7 @@
     "koa-views": "^6.2.0",
     "mysql": "^2.17.1",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.8.5"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
